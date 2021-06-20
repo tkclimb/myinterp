@@ -4,14 +4,21 @@
 %token PLUS MINUS
 %token STAR SLASH
 %token LT
+%token SEMICOLON
 %token EOF
 
-%start <Ast.expr> program
+%start <Ast.program> program
 
 %%
 
-program:
-  | e=expr EOF { e }
+program: sl=stmt_list EOF { Utils.rev_list sl }
+
+stmt_list:
+  | s=stmt { s::[] }
+  | b=stmt_list s=stmt { s::b }
+
+stmt:
+  | e=expr SEMICOLON { Ast.ExprStmt e }
 
 expr:
   | e=cmp_expr { e }

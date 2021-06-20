@@ -18,4 +18,5 @@ rule tokenize = parse
   | "*" { STAR }
   | "/" { SLASH }
   | "<" { LT }
+  | ";" { SEMICOLON }
   | eof { EOF }

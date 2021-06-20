@@ -10,7 +10,11 @@ type expr =
   | BoolLit of bool
   | BinaryOp of bin_op * expr * expr
 
-type program = Expr of expr
+type stmt = 
+  | ExprStmt of expr
+
+type program = stmt list
+(* type program = Stmt of stmt  *)
 
 let rec print = function
   | IntLit l -> string_of_int l
@@ -39,5 +43,5 @@ and eval_binary_op op l r = match op, l, r with
   | Mul, _, _ -> err ("Both args must be integer: *")
   | Div, IntLit l, IntLit r -> IntLit (l / r)
   | Div, _, _ -> err ("Both args must be integer: /")
-  | Lt, BoolLit l, BoolLit r-> BoolLit (l < r)
+  | Lt, IntLit l, IntLit r  -> BoolLit (l < r)
   | Lt, _, _ -> err ("Both args must be integer: <")
