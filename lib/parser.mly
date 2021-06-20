@@ -1,9 +1,12 @@
-%token LPAREN RPAREN
+%token <string> ID
 %token <int> INT_LIT
 %token <bool> BOOL_LIT
 %token PLUS MINUS
 %token STAR SLASH
 %token LT
+%token ASSIGN
+%token LET
+%token LPAREN RPAREN
 %token SEMICOLON
 %token EOF
 
@@ -19,6 +22,7 @@ stmt_list:
 
 stmt:
   | e=expr SEMICOLON { Ast.ExprStmt e }
+  | LET v=ID ASSIGN e=expr SEMICOLON { Ast.LetStmt (v, e) }
 
 expr:
   | e=cmp_expr { e }

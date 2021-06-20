@@ -12,9 +12,9 @@ type expr =
 
 type stmt = 
   | ExprStmt of expr
+  | LetStmt of id * expr
 
 type program = stmt list
-(* type program = Stmt of stmt  *)
 
 let rec print = function
   | IntLit l -> string_of_int l
@@ -45,3 +45,16 @@ and eval_binary_op op l r = match op, l, r with
   | Div, _, _ -> err ("Both args must be integer: /")
   | Lt, IntLit l, IntLit r  -> BoolLit (l < r)
   | Lt, _, _ -> err ("Both args must be integer: <")
+
+
+let rec print_program = function
+  | [] -> ()
+  | stmt::stmt_list ->
+      match stmt with
+        | ExprStmt (expr) ->
+          let result = eval expr in
+          Printf.printf "%s = %s\n" (print expr) (print result)
+        | LetStmt (id, expr) ->
+          let result = eval expr in
+          Printf.printf "%s = %s\n" id (print result);
+      print_program stmt_list
