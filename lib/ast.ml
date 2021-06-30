@@ -10,9 +10,10 @@ type expr =
   | IntLit of int
   | BoolLit of bool
   | BinaryOp of bin_op * expr * expr
+  | LetExpr of id * expr * expr
 
 type stmt = 
   | ExprStmt of expr
-  | LetStmt of id * expr
 
 type program = stmt list
+

@@ -6,6 +6,7 @@
 %token LT
 %token ASSIGN
 %token LET
+%token IN
 %token LPAREN RPAREN
 %token SEMICOLON
 %token EOF
@@ -22,10 +23,14 @@ stmt_list:
 
 stmt:
   | e=expr SEMICOLON { Ast.ExprStmt e }
-  | LET v=ID ASSIGN e=expr SEMICOLON { Ast.LetStmt (v, e) }
 
 expr:
   | e=cmp_expr { e }
+  | e=let_expr { e }
+
+let_expr: LET v=ID ASSIGN e1=expr IN e2=expr {
+  Ast.LetExpr (v, e1, e2)
+}
 
 cmp_expr:
   | l=cmp_expr LT r=add_expr { Ast.BinaryOp (Ast.Lt, l, r) }
