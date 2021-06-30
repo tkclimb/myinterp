@@ -42,6 +42,7 @@ mul_expr:
   | e=primary_expr { e }
 
 primary_expr:
+  | k=ID { Ast.Var k }
   | i=INT_LIT { Ast.IntLit i }
   | b=BOOL_LIT { Ast.BoolLit b }
   | LPAREN e=expr RPAREN { e }
