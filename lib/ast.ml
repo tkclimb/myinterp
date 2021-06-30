@@ -11,6 +11,7 @@ type expr =
   | BoolLit of bool
   | BinaryOp of bin_op * expr * expr
   | LetExpr of id * expr * expr
+  | IfExpr of expr * expr * expr
 
 type stmt = 
   | ExprStmt of expr

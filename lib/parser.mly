@@ -1,15 +1,16 @@
-%token <string> ID
-%token <int> INT_LIT
-%token <bool> BOOL_LIT
+%token LET IN
+%token IF THEN ELSE
+%token LPAREN RPAREN
 %token PLUS MINUS
 %token STAR SLASH
 %token LT
 %token ASSIGN
-%token LET
-%token IN
-%token LPAREN RPAREN
 %token SEMICOLON
 %token EOF
+
+%token <string> ID
+%token <int> INT_LIT
+%token <bool> BOOL_LIT
 
 %start <Ast.program> program
 
@@ -27,9 +28,14 @@ stmt:
 expr:
   | e=cmp_expr { e }
   | e=let_expr { e }
+  | e=if_expr  { e }
 
 let_expr: LET v=ID ASSIGN e1=expr IN e2=expr {
   Ast.LetExpr (v, e1, e2)
+}
+
+if_expr: IF c=expr THEN et=expr ELSE ef=expr {
+  Ast.IfExpr (c, et, ef)
 }
 
 cmp_expr:

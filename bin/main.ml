@@ -11,9 +11,7 @@ let arg_spec = Arg.align [
      " Path to the output file (default: stdout)");
   ]
 
-let compile prompt ichan cont =
-  print_string prompt;
-  flush stdout;
+let compile ichan cont =
   let lexbuf = Lexing.from_channel ichan in
   let prog = Parser.program Lexer.tokenize lexbuf in
   Eval.print_program Env.empty prog;
@@ -23,9 +21,9 @@ let _ =
   Arg.parse arg_spec (fun s -> srcfile := s) help;
   if !srcfile = "-" then
     let c = stdin in
-    let rec k () = compile "> " c k in
-    compile "> " c k
+    let rec k () = compile c k in
+    compile c k
   else
     let c = open_in !srcfile in
     let k () = close_in c in
-    compile "" c k
+    compile c k

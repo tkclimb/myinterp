@@ -13,8 +13,9 @@ rule tokenize = parse
   | whitespace+ { tokenize lexbuf }
   | "let"   { LET }
   | "in"    { IN }
-  | "true"  { BOOL_LIT true }
-  | "false" { BOOL_LIT false }
+  | "if"    { IF }
+  | "then"  { THEN }
+  | "else"  { ELSE }
   | "(" { LPAREN }
   | ")" { RPAREN }
   | "+" { PLUS }
@@ -24,6 +25,8 @@ rule tokenize = parse
   | "<" { LT }
   | "=" { ASSIGN }
   | ";" { SEMICOLON }
+  | "true"  { BOOL_LIT true }
+  | "false" { BOOL_LIT false }
   | id_string as id { ID id }
   | number as n { INT_LIT (int_of_string n ) }
   | eof { EOF }

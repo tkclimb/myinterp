@@ -9,12 +9,15 @@ let rec print = function
   | LetExpr (k, e1, e2) -> 
     Printf.printf "%s = %s\n" k (print e1);
     print e2
+  | IfExpr (c, et, ef) -> print_if_expr c et ef
 and print_binary_op op l r = match op with
   | Add -> Printf.sprintf "(+ %s %s)" (print l) (print r)
   | Sub -> Printf.sprintf "(- %s %s)" (print l) (print r)
   | Mul -> Printf.sprintf "(* %s %s)" (print l) (print r)
   | Div -> Printf.sprintf "(/ %s %s)" (print l) (print r)
   | Lt -> Printf.sprintf "(< %s %s)" (print l) (print r)
+and print_if_expr c et ef = Printf.sprintf 
+  "(if %s then %s else %s)" (print c) (print et) (print ef)
 
 let rec eval env = function
   | Var k -> lookup k env
@@ -28,6 +31,13 @@ let rec eval env = function
     let v = eval env e1 in 
     let new_env = extend k v env in
     eval new_env e2
+  | IfExpr (c, et, ef) -> 
+    let v = eval env c in 
+    match v with
+    | BoolLit b -> 
+      if b then (eval env et)
+      else (eval env ef)
+    | _ -> err ("Invalid condition found...");
 and eval_binary_op op l r = match op, l, r with
   | Add, IntLit l, IntLit r -> IntLit (l + r)
   | Add, _, _ -> err ("Both args must be integer: +")
