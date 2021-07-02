@@ -1,12 +1,12 @@
 %token LET IN
+%token REC
 %token IF THEN ELSE
 %token FUN
 %token RARROW
 %token LPAREN RPAREN
 %token PLUS MINUS
 %token STAR SLASH
-%token LT
-%token ASSIGN
+%token EQ LT GT
 %token SEMICOLON
 %token EOF
 
@@ -26,15 +26,24 @@ stmt_list:
 
 stmt:
   | e=expr SEMICOLON { Ast.ExprStmt e }
+  | LET k=ID EQ e=expr SEMICOLON { Ast.LetStmt (k, e) }
+  | LET REC k=ID EQ FUN p=ID RARROW e=expr SEMICOLON {
+      Ast.LetRecStmt (k, p, e)
+    }
 
 expr:
   | e=cmp_expr { e }
   | e=let_expr { e }
+  | e=let_rec_expr { e }
   | e=if_expr  { e }
-  | e=fun_expr  { e }
+  | e=fun_expr { e }
 
-let_expr: LET k=ID ASSIGN e1=expr IN e2=expr {
+let_expr: LET k=ID EQ e1=expr IN e2=expr {
   Ast.LetExpr (k, e1, e2)
+}
+
+let_rec_expr: LET REC k=ID EQ FUN p=ID RARROW e1=expr IN e2=expr {
+  Ast.LetRecExpr (k, p, e1, e2)
 }
 
 if_expr: IF c=expr THEN et=expr ELSE ef=expr {
@@ -46,7 +55,9 @@ fun_expr: FUN k=ID RARROW e=expr {
 }
 
 cmp_expr:
+  | l=cmp_expr EQ r=add_expr { Ast.BinOpExpr (Ast.Eq, l, r) }
   | l=cmp_expr LT r=add_expr { Ast.BinOpExpr (Ast.Lt, l, r) }
+  | l=cmp_expr GT r=add_expr { Ast.BinOpExpr (Ast.Gt, l, r) }
   | e=add_expr { e }
 
 add_expr:
