@@ -16,6 +16,8 @@ rule tokenize = parse
   | "if"    { IF }
   | "then"  { THEN }
   | "else"  { ELSE }
+  | "fun"   { FUN }
+  | "->"    { RARROW }
   | "(" { LPAREN }
   | ")" { RPAREN }
   | "+" { PLUS }

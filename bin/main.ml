@@ -17,7 +17,7 @@ let compile ichan cont =
   Eval.print_program Env.empty prog;
   cont ()
 
-let _ =
+let main () =
   Arg.parse arg_spec (fun s -> srcfile := s) help;
   if !srcfile = "-" then
     let c = stdin in
@@ -27,3 +27,5 @@ let _ =
     let c = open_in !srcfile in
     let k () = close_in c in
     compile c k
+
+let () = main ()

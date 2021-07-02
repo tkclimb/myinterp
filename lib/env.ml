@@ -1,4 +1,4 @@
-type 'a t = (Ast.id * 'a) list
+type 'a t = (string * 'a) list
 
 exception Not_found
 
